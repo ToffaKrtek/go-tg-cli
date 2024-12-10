@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/ToffaKrtek/go-tg-cli/environment"
-	"github.com/ToffaKrtek/go-tg-cli/send"
+	"github.com/ToffaKrtek/go-tg-cli/telegram"
 )
 
 var envPath = ""
@@ -23,15 +23,15 @@ func main() {
 
 	flag.Parse()
 
-	message := send.NewMessage(
+	message := telegram.NewMessage(
 		*flagToken,
-		send.Text(*flagMsg),
-		send.Image(*flagImage),
-		send.File(*flagFile),
-		send.ParseMode(*flagParseMode),
-		send.Type(*flagType),
-		send.ChatId(*flagChatId),
-		send.Topic(*flagTopicId),
+		telegram.Text(*flagMsg),
+		telegram.Image(*flagImage),
+		telegram.File(*flagFile),
+		telegram.ParseMode(*flagParseMode),
+		telegram.Type(*flagType),
+		telegram.ChatId(*flagChatId),
+		telegram.Topic(*flagTopicId),
 	)
 	if err := message.Send(); err != nil {
 		fmt.Println("Error sending message:", err)

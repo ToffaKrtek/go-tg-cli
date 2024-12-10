@@ -1,4 +1,4 @@
-package send
+package telegram
 
 import (
 	"bytes"
@@ -20,6 +20,24 @@ var statusTypes = []string{
 }
 
 func (m Message) Send() error {
+	if len(m.File) > 0 {
+		err := m.sendFile()
+		if err != nil {
+			return err
+		}
+	}
+	if len(m.Image) > 0 {
+		err := m.sendImage()
+		if err != nil {
+			return err
+		}
+	}
+	if len(m.Text) > 0 {
+		err := m.sendText()
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -64,6 +82,10 @@ func (m Message) sendFileRequest(url string, filePath string, partName string) e
 	}
 
 	writer.WriteField("chat_id", m.ChatId)
+
+	if len(m.Topic) > 0 {
+		writer.WriteField("messaage_thread_id", m.Topic)
+	}
 	writer.Close()
 
 	req, err := http.NewRequest("POST", url, body)

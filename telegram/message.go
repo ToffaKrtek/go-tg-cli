@@ -1,4 +1,4 @@
-package send
+package telegram
 
 import (
 	"encoding/json"
@@ -33,7 +33,7 @@ func (m Message) getMsgData(text string, mode string) []byte {
 		"parse_mode": mode,
 	}
 	if len(m.Topic) > 0 {
-		res["topic_id"] = m.Topic
+		res["message_thread_id"] = m.Topic
 	}
 	data, err := json.Marshal(res)
 	if err != nil {
@@ -57,6 +57,7 @@ func Topic(topic string) MessageFunc {
 		}
 	}
 }
+
 func Text(text string) MessageFunc {
 	return func(m *Message) {
 		m.Text = text
