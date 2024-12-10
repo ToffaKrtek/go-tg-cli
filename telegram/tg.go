@@ -1,4 +1,4 @@
-package send
+package telegram
 
 type TG struct {
 	Token string
