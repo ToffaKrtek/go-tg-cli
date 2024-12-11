@@ -2,6 +2,7 @@ package s3
 
 import (
 	"context"
+	"path/filepath"
 	"time"
 
 	minio "github.com/minio/minio-go/v7"
@@ -13,6 +14,9 @@ func (f S3File) Upload() (string, error) {
 	client, err := f.getClient()
 	if err != nil {
 		return "", err
+	}
+	if f.ObjectName == "" {
+		f.ObjectName = getObjectNameFromFilePath(f.FilePath)
 	}
 	_, err = client.FPutObject(
 		ctx,
@@ -37,4 +41,9 @@ func (f S3File) getClient() (*minio.Client, error) {
 		Creds:  credentials.NewStaticV4(f.AccessKeyID, f.SecretAccessKey, ""),
 		Secure: true,
 	})
+}
+
+// Получаем только имя файла
+func getObjectNameFromFilePath(filePath string) string {
+	return filepath.Base(filePath)
 }
