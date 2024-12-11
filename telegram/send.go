@@ -21,7 +21,7 @@ var statusTypes = []string{
 
 func (m Message) Send() error {
 	if len(m.File) > 0 {
-		err := m.sendFile()
+		err := m.makeSendFile()
 		if err != nil {
 			return err
 		}
