@@ -2,16 +2,17 @@ package s3
 
 import (
 	"context"
+	"time"
 
 	minio "github.com/minio/minio-go/v7"
 	credentials "github.com/minio/minio-go/v7/pkg/credentials"
 )
 
-func (f S3File) Upload() error {
+func (f S3File) Upload() (string, error) {
 	ctx := context.Background()
 	client, err := f.getClient()
 	if err != nil {
-		return err
+		return "", err
 	}
 	_, err = client.FPutObject(
 		ctx,
@@ -20,7 +21,11 @@ func (f S3File) Upload() error {
 		f.FilePath,
 		minio.PutObjectOptions{ContentType: "application/octet-stream"},
 	)
-	return err
+	presignedURL, err := client.PresignedGetObject(ctx, f.Bucket, f.ObjectName, 24*time.Hour, nil)
+	if err != nil {
+		return "", err
+	}
+	return presignedURL.String(), err
 }
 
 // func (f S3File) Download() error {
